@@ -90,8 +90,6 @@ class ListFieldFormBloc extends FormBloc<String, String> {
 
   @override
   void onSubmitting() async {
-    print("denem 1");
-
     final disease = Disease(
       name: diseaseName.value,
       specialities: specialites.value,
@@ -117,46 +115,12 @@ class ListFieldFormBloc extends FormBloc<String, String> {
 
     SupabaseService().addDisease(disease);
 
-    print("denem 2");
-
     debugPrint(disease.toJson().toString());
 
     emitSuccess(
         canSubmitAgain: false, successResponse: "Reçete başarıyla eklendi");
   }
 }
-
-/* Without serialization
-    final clubV1 = Club(
-      clubName: diseaseName.value,
-      members: prescriptions.value.map<Member>((memberField) {
-        return Member(
-          firstName: memberField.prescriptionName.value,
-          lastName: memberField.shortDescription.value,
-          /*  hobbies: memberField.medicines.value
-              .map((hobbyField) => hobbyField.value)
-              .toList(),  */
-        );
-      }).toList(),
-    );
-
-    debugPrint('clubV1');
-    debugPrint(clubV1.toJson().toString());
-
-    // With Serialization
-    final clubV2 = Club.fromJson(state.toJson());
-
-    debugPrint('clubV2');
-    debugPrint(clubV2.toJson().toString());
-
-    emitSuccess(
-      canSubmitAgain: true,
-      successResponse: const JsonEncoder.withIndent('    ').convert(
-        state.toJson(),
-      ),
-    );
-  }
-}*/
 
 class PrescriptionFieldBloc extends GroupFieldBloc {
   final BooleanFieldBloc isIlyasYolbas;

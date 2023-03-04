@@ -29,7 +29,6 @@ class SearchPage extends StatelessWidget {
                   hintText: 'İlaç Adı',
                 ),
                 onChanged: (value) {
-                  print(value);
                   drugsProvider.searchDrug(value);
                 },
               ),
@@ -43,6 +42,8 @@ class SearchPage extends StatelessWidget {
                                 .changeValue(drugsProvider.drugs[index].name);
                             medicineFieldBloc.barkod.changeValue(
                                 drugsProvider.drugs[index].barkod.toString());
+                            medicineFieldBloc.activeSubstance.changeValue(
+                                drugsProvider.drugs[index].activeSubstance);
 
                             Navigator.pop(context);
                           },

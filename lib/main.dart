@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:form_for_supabase_db/consts/supabase_key.dart';
-import 'package:form_for_supabase_db/drug_search/drug_search_page.dart';
 import 'package:form_for_supabase_db/form_page/view/form_page_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
