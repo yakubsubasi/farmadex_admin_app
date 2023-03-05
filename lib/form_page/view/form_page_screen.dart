@@ -23,7 +23,14 @@ class FormPage extends StatelessWidget {
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
                 debugPrint("FloatingActionButton pressed");
-                formBloc.submit();
+                try {
+                  formBloc.submit();
+                } catch (e) {
+                  // show a dialog about the error
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("bir hata oldu: $e")));
+                }
               },
               icon: const Icon(Icons.send),
               label: const Text('Gönder'),

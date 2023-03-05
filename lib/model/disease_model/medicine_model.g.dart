@@ -27,5 +27,5 @@ Map<String, dynamic> _$MedicineToJson(Medicine instance) => <String, dynamic>{
       'howToUse': instance.howToUse,
       'periode': instance.periode,
       'barkod': instance.barkod,
-      'numberOfBoxes': instance.numberOfBoxes,
+      'numberOfBoxes': instance.numberOfBoxes
     };

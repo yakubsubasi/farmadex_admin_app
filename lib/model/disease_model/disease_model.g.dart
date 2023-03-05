@@ -22,7 +22,7 @@ Map<String, dynamic> _$DiseaseToJson(Disease instance) => <String, dynamic>{
       'name': instance.name,
       'specialities':
           instance.specialities?.map((e) => _$SpecialityEnumMap[e]!).toList(),
-      'prescriptions': instance.prescriptions?.map((e) => e.toJson()).toList(),
+      'prescriptions': instance.prescriptions?.map((e) => e.toJson()).toList()
     };
 
 const _$SpecialityEnumMap = {
@@ -42,5 +42,5 @@ const _$SpecialityEnumMap = {
   Speciality.ophtalmology: 'ophtalmology',
   Speciality.dermatology: 'dermatology',
   Speciality.pulmonaryDisease: 'pulmonaryDisease',
-  Speciality.familyMedicine: 'familyMedicine',
+  Speciality.familyMedicine: 'familyMedicine'
 };

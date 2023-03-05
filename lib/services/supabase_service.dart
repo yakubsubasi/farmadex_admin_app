@@ -34,6 +34,8 @@ class SupabaseService {
         await supabase.from('medicines').insert({
           'prescription_id': prescRes[0]['id'],
           'barkod': medicine['barkod'],
+          'name': medicine['name'],
+          'active_substance': medicine['activeSubstance'],
           'how_many': medicine['howMany'],
           'how_often': medicine['howOften'],
           'how_to_use': medicine['howToUse'],

@@ -10,12 +10,7 @@ part 'disease_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Disease {
-  Disease({
-    this.id,
-    this.name,
-    this.specialities,
-    this.prescriptions,
-  });
+  Disease({this.id, this.name, this.specialities, this.prescriptions});
   String? id;
   String? name;
   List<Speciality>? specialities;

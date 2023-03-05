@@ -7,8 +7,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'drug_search/drugs_provider.dart';
 
 void main() {
-  // add supabase
-
   WidgetsFlutterBinding.ensureInitialized();
 
   Supabase.initialize(

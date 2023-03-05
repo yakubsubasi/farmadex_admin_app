@@ -24,5 +24,5 @@ Map<String, dynamic> _$PrescriptionToJson(Prescription instance) =>
       'shortDescription': instance.shortDescription,
       'explanation': instance.explanation,
       'isIlyasYolbas': instance.isIlyasYolbas,
-      'medicines': instance.medicines?.map((e) => e.toJson()).toList(),
+      'medicines': instance.medicines?.map((e) => e.toJson()).toList()
     };
