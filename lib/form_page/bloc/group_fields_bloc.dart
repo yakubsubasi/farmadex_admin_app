@@ -1,12 +1,9 @@
+import 'package:farmadex_models/farmadex_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:form_for_supabase_db/services/supabase_service.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../model/disease_model/disease_model.dart';
-import '../../model/disease_model/medicine_model.dart';
-import '../../model/disease_model/prescription_model.dart';
 
 class ListFieldFormBloc extends FormBloc<String, String> {
   final diseaseName = TextFieldBloc(name: 'diseaseName', validators: [
@@ -23,7 +20,10 @@ class ListFieldFormBloc extends FormBloc<String, String> {
           prescriptionName: TextFieldBloc(name: 'name'),
           shortDescription: TextFieldBloc(name: 'shortDescription'),
           isIlyasYolbas: BooleanFieldBloc(name: 'isIlyasYolbas'),
-          explanation: TextFieldBloc(name: 'explanation'),
+          explanation: ListFieldBloc(name: 'explanation', fieldBlocs: [
+            TextFieldBloc(
+                name: 'explanation', validators: [FieldBlocValidators.required])
+          ]),
           medicines: ListFieldBloc(name: 'medicines', fieldBlocs: [
             MedicineFieldBloc(
               name: 'medicine',
@@ -60,7 +60,7 @@ class ListFieldFormBloc extends FormBloc<String, String> {
       shortDescription: TextFieldBloc(name: 'shortDescription'),
       medicines: ListFieldBloc(name: 'medicines'),
       isIlyasYolbas: BooleanFieldBloc(name: 'isIlyasYolbas'),
-      explanation: TextFieldBloc(name: 'explanation'),
+      explanation: ListFieldBloc(name: 'explanation'),
     ));
   }
 
@@ -88,6 +88,17 @@ class ListFieldFormBloc extends FormBloc<String, String> {
     prescriptions.value[memberIndex].medicines.removeFieldBlocAt(hobbyIndex);
   }
 
+  void addExplanationToPrescription(int prescriptionIndex) {
+    prescriptions.value[prescriptionIndex].explanation.addFieldBloc(
+        TextFieldBloc(
+            name: 'explanation', validators: [FieldBlocValidators.required]));
+  }
+
+  void removeExplanationFromPrescription(
+      {required int memberIndex, required int hobbyIndex}) {
+    prescriptions.value[memberIndex].explanation.removeFieldBlocAt(hobbyIndex);
+  }
+
   @override
   void onSubmitting() async {
     final disease = Disease(
@@ -98,7 +109,10 @@ class ListFieldFormBloc extends FormBloc<String, String> {
             name: prescriptionField.prescriptionName.value,
             shortDescription: prescriptionField.shortDescription.value,
             isIlyasYolbas: prescriptionField.isIlyasYolbas.value,
-            explanation: prescriptionField.explanation.value,
+            explanation: prescriptionField.explanation.value
+                .map<String>((explanationField) {
+              return explanationField.value;
+            }).toList(),
             medicines: prescriptionField.medicines.value
                 .map<Medicine>((medicineField) {
               return Medicine(
@@ -127,7 +141,7 @@ class PrescriptionFieldBloc extends GroupFieldBloc {
   final TextFieldBloc prescriptionName;
   final TextFieldBloc shortDescription;
   final ListFieldBloc<MedicineFieldBloc, dynamic> medicines;
-  final TextFieldBloc explanation;
+  final ListFieldBloc<TextFieldBloc, dynamic> explanation;
 
   PrescriptionFieldBloc({
     required this.isIlyasYolbas,

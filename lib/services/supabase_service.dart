@@ -1,6 +1,5 @@
+import 'package:farmadex_models/farmadex_models.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../model/disease_model/disease_model.dart';
 
 class SupabaseService {
   final supabase = Supabase.instance.client;

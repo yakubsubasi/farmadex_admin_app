@@ -81,10 +81,48 @@ class PrescriptionCard extends StatelessWidget {
               icon: const Icon(Icons.add),
               label: const Text('İlaç Ekle'),
             ),
-            TextFieldBlocBuilder(
-              textFieldBloc: prescriptionField.explanation,
-              decoration: const InputDecoration(
-                  labelText: "Tedavi ile ilgili ek açıklamalar"),
+            BlocBuilder<ListFieldBloc<TextFieldBloc, dynamic>,
+                ListFieldBlocState<TextFieldBloc, dynamic>>(
+              bloc: prescriptionField.explanation,
+              builder: (context, state) {
+                if (state.fieldBlocs.isNotEmpty) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: state.fieldBlocs.length,
+                    itemBuilder: (context, i) {
+                      final explanationFieldBloc = state.fieldBlocs[i];
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: TextFieldBlocBuilder(
+                              textFieldBloc: explanationFieldBloc,
+                              decoration: const InputDecoration(
+                                labelText: 'Tedavi ile ilgili ek açıklamalar',
+                              ),
+                            ),
+                          ),
+                          if (i != 0)
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => prescriptionField.explanation
+                                  .removeFieldBlocAt(
+                                i,
+                              ),
+                            ),
+                          IconButton(
+                              onPressed: () =>
+                                  prescriptionField.explanation.addFieldBloc(
+                                    TextFieldBloc(),
+                                  ),
+                              icon: const Icon(Icons.add))
+                        ],
+                      );
+                    },
+                  );
+                }
+                return Container();
+              },
             ),
             CheckboxFieldBlocBuilder(
               booleanFieldBloc: prescriptionField.isIlyasYolbas,

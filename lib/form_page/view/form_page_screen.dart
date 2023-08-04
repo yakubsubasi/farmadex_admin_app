@@ -1,6 +1,7 @@
+import 'package:farmadex_models/farmadex_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
-import '../../model/disease_model/disease_model.dart';
+
 import '../bloc/group_fields_bloc.dart';
 import 'widgets/loading_dialog.dart';
 import 'widgets/prescription_card.dart';
