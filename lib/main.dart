@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_for_supabase_db/consts/supabase_key.dart';
-import 'package:form_for_supabase_db/form_page/view/form_page_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:form_for_supabase_db/feature/list_all_desease_page/list_disease_view.dart';
+import 'package:provider/provider.dart' as provider;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'drug_search/drugs_provider.dart';
+import 'feature/drug_search/drugs_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,9 +15,11 @@ void main() {
     anonKey: SupabaseConsts.ANON_KEY,
   );
 
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => DrugsProvider()),
-  ], child: const MyApp()));
+  runApp(ProviderScope(
+    child: provider.MultiProvider(providers: [
+      provider.ChangeNotifierProvider(create: (_) => DrugsProvider()),
+    ], child: const MyApp()),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -26,10 +29,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowMaterialGrid: false,
       theme: ThemeData(
+        useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: const FormPage(),
+      home: const ListDiseaseView(),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
-import 'package:form_for_supabase_db/form_page/view/widgets/medicine_card.dart';
+import 'package:form_for_supabase_db/feature/form_page/view/widgets/medicine_card.dart';
 
 import '../../bloc/group_fields_bloc.dart';
 
@@ -123,12 +123,6 @@ class PrescriptionCard extends StatelessWidget {
                 }
                 return Container();
               },
-            ),
-            CheckboxFieldBlocBuilder(
-              booleanFieldBloc: prescriptionField.isIlyasYolbas,
-              body: const Text(
-                "İlyas Yolbaş Kitabından",
-              ),
             ),
           ],
         ),

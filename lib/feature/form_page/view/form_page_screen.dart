@@ -23,9 +23,9 @@ class FormPage extends StatelessWidget {
             appBar: AppBar(title: const Text('Reçete Oluşturma')),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
-                debugPrint("FloatingActionButton pressed");
                 try {
                   formBloc.submit();
+                  debugPrint("FloatingActionButton pressed");
                 } catch (e) {
                   // show a dialog about the error
 
@@ -64,6 +64,78 @@ class FormPage extends StatelessWidget {
                         prefixIcon: Icon(Icons.title),
                       ),
                     ),
+
+                    // disease explanation
+                    TextFieldBlocBuilder(
+                      textFieldBloc: formBloc.diseaseExplanation,
+                      decoration: const InputDecoration(
+                        labelText: 'Hastalık Açıklaması',
+                        prefixIcon: Icon(Icons.description),
+                      ),
+                    ),
+
+                    //disease short explanation
+                    TextFieldBlocBuilder(
+                      textFieldBloc: formBloc.diseaseShortDescription,
+                      decoration: const InputDecoration(
+                        labelText: 'Hastalık Kısa Açıklaması',
+                        prefixIcon: Icon(Icons.short_text),
+                      ),
+                    ),
+
+                    // disease search text
+                    TextFieldBlocBuilder(
+                      textFieldBloc: formBloc.searchText,
+                      decoration: const InputDecoration(
+                        labelText: 'Hastalık Arama Metni',
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                    ),
+
+                    // warnings
+                    BlocBuilder<ListFieldBloc<TextFieldBloc, dynamic>,
+                        ListFieldBlocState<TextFieldBloc, dynamic>>(
+                      bloc: formBloc.warnings,
+                      builder: (context, state) {
+                        if (state.fieldBlocs.isNotEmpty) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.fieldBlocs.length,
+                            itemBuilder: (context, i) {
+                              return Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFieldBlocBuilder(
+                                      textFieldBloc: state.fieldBlocs[i],
+                                      decoration: const InputDecoration(
+                                        labelText: 'Uyarı',
+                                        prefixIcon: Icon(Icons.warning),
+                                      ),
+                                    ),
+                                  ),
+                                  if (i != 0)
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () =>
+                                          formBloc.warnings.removeFieldBlocAt(
+                                        i,
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          formBloc.addWarning();
+                        },
+                        icon: const Icon(Icons.add)),
+
                     BlocBuilder<ListFieldBloc<PrescriptionFieldBloc, dynamic>,
                         ListFieldBlocState<PrescriptionFieldBloc, dynamic>>(
                       bloc: formBloc.prescriptions,

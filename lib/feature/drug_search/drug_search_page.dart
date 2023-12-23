@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
-import 'package:form_for_supabase_db/form_page/bloc/group_fields_bloc.dart';
+import 'package:form_for_supabase_db/feature/form_page/bloc/group_fields_bloc.dart';
 
 import 'drugs_provider.dart';
 
