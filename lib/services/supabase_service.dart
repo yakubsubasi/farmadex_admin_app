@@ -15,44 +15,32 @@ class SupabaseService {
   Future<Disease> updateDisease(Disease disease) async {
     final diseaseMap = disease.toJson();
 
-    await supabase
-        .from('diseases')
-        .update({
-          'name': diseaseMap['name'],
-          'explanation': diseaseMap['explanation'],
-          'short_description': diseaseMap['short_description'],
-          'search_text': diseaseMap['search_text'],
-          'warnings': diseaseMap['warnings'],
-          'specialities': diseaseMap['specialities'],
-        })
-        .eq('id', diseaseMap['id'])
-        .select();
+    await supabase.from('diseases').update({
+      'name': diseaseMap['name'],
+      'explanation': diseaseMap['explanation'],
+      'short_description': diseaseMap['short_description'],
+      'search_text': diseaseMap['search_text'],
+      'warnings': diseaseMap['warnings'],
+      'specialities': diseaseMap['specialities'],
+    }).match({'id': diseaseMap['id']}).select();
 
     for (var prescription in diseaseMap['prescriptions']) {
-      await supabase
-          .from('prescriptions')
-          .update({
-            'explanation': prescription['explanation'],
-            'name': prescription['name'],
-            'short_description': prescription['short_description'],
-          })
-          .eq('id', prescription['id'])
-          .select();
+      await supabase.from('prescriptions').update({
+        'explanation': prescription['explanation'],
+        'name': prescription['name'],
+        'short_description': prescription['short_description'],
+      }).match({'id': prescription['id']}).select();
 
       for (var medicine in prescription['medicines']) {
-        await supabase
-            .from('medicines')
-            .update({
-              'barkod': medicine['barkod'],
-              'name': medicine['name'],
-              'active_substance': medicine['active_substance'],
-              'how_many': medicine['how_many'],
-              'how_often': medicine['how_often'],
-              'how_to_use': medicine['how_to_use'],
-              'number_of_boxes': medicine['number_of_boxes'],
-            })
-            .eq('id', medicine['id'])
-            .select();
+        await supabase.from('medicines').update({
+          'barkod': medicine['barkod'],
+          'name': medicine['name'],
+          'active_substance': medicine['active_substance'],
+          'how_many': medicine['how_many'],
+          'how_often': medicine['how_often'],
+          'how_to_use': medicine['how_to_use'],
+          'number_of_boxes': medicine['number_of_boxes'],
+        }).match({'id': medicine['id'] ?? ''}).select();
       }
     }
     return disease;

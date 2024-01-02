@@ -5,39 +5,35 @@ import 'package:form_for_supabase_db/feature/form_page/bloc/group_fields_bloc.da
 import 'package:form_for_supabase_db/feature/form_page/view/widgets/loading_dialog.dart';
 import 'package:form_for_supabase_db/feature/form_page/view/widgets/prescription_card.dart';
 import 'package:form_for_supabase_db/feature/form_page/view/widgets/sucsess_screen.dart';
+import 'package:form_for_supabase_db/feature/update_page/bloc/update_fields_bloc.dart';
 
 class UpdatePage extends StatelessWidget {
-  final Disease? disease;
+  final Disease disease;
 
-  const UpdatePage({Key? key, this.disease}) : super(key: key);
+  const UpdatePage({Key? key, required this.disease}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ListFieldFormBloc(disease),
+      create: (context) => UpdateFieldFormBloc(disease),
       child: Builder(
         builder: (context) {
-          final formBloc = context.read<ListFieldFormBloc>();
+          final formBloc = context.read<UpdateFieldFormBloc>();
 
           return Scaffold(
             resizeToAvoidBottomInset: false,
-            appBar: AppBar(title: const Text('Reçete Oluşturma')),
+            appBar: AppBar(title: const Text('Reçete Güncelleme')),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
                 debugPrint("FloatingActionButton pressed");
-                try {
-                  formBloc.submit();
-                } catch (e) {
-                  // show a dialog about the error
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("bir hata oldu: $e")));
-                }
+                print(formBloc.state.canSubmit);
+                formBloc.submit();
               },
               icon: const Icon(Icons.send),
               label: const Text('Güncelle'),
             ),
-            body: FormBlocListener<ListFieldFormBloc, String, String>(
+            body: FormBlocListener<UpdateFieldFormBloc, String, String>(
               onSubmitting: (context, state) {
                 LoadingDialog.show(context);
               },

@@ -1,6 +1,7 @@
 import 'package:farmadex_models/farmadex_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
+import 'package:form_for_supabase_db/feature/form_page/bloc/group_fields_bloc.dart';
 import 'package:form_for_supabase_db/services/supabase_service.dart';
 
 class UpdateFieldFormBloc extends FormBloc<String, String> {
@@ -22,34 +23,26 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
   );
 
   final prescriptions = ListFieldBloc<PrescriptionFieldBloc, dynamic>(
-      name: 'prescriptions',
-      fieldBlocs: [
-        PrescriptionFieldBloc(
-          name: 'prescription',
-          prescriptionName: TextFieldBloc(name: 'name'),
-          shortDescription: TextFieldBloc(name: 'shortDescription'),
-          medicines: ListFieldBloc(name: 'medicines'),
-          explanation: ListFieldBloc(name: 'explanation'),
-        )
-      ]);
+    name: 'prescriptions',
+  );
 
   final specialites = MultiSelectFieldBloc(items: Speciality.values);
+  final Disease disease;
 
-  ListFieldFormBloc([Disease? disease]) {
+  UpdateFieldFormBloc(this.disease) {
     addFieldBlocs(
       fieldBlocs: [
-        diseaseName..updateInitialValue(disease?.name ?? ''),
-        diseaseExplanation..updateInitialValue(disease?.explanation ?? ''),
+        diseaseName..updateInitialValue(disease.name ?? ''),
+        diseaseExplanation..updateInitialValue(disease.explanation ?? ''),
         diseaseShortDescription
-          ..updateInitialValue(disease?.shortDescription ?? ''),
-        searchText..updateInitialValue(disease?.searchText ?? ''),
+          ..updateInitialValue(disease.shortDescription ?? ''),
+        searchText..updateInitialValue(disease.searchText ?? ''),
         warnings
-          ..addFieldBlocs((disease?.warnings ?? []).map((warning) {
-                return TextFieldBloc(name: 'warning', initialValue: warning);
-              }).toList() ??
-              []),
+          ..addFieldBlocs((disease.warnings ?? []).map((warning) {
+            return TextFieldBloc(name: 'warning', initialValue: warning);
+          }).toList()),
         prescriptions
-          ..addFieldBlocs((disease?.prescriptions ?? []).map((prescription) {
+          ..addFieldBlocs((disease.prescriptions ?? []).map((prescription) {
             final prescriptionFieldBloc = PrescriptionFieldBloc(
               prescription: prescription,
               name: 'prescription',
@@ -57,8 +50,8 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
               shortDescription: TextFieldBloc(name: 'shortDescription'),
               explanation: ListFieldBloc(name: 'explanation', fieldBlocs: [
                 TextFieldBloc(
-                    name: 'explanation',
-                    validators: [FieldBlocValidators.required])
+                  name: 'explanation',
+                )
               ]),
               medicines: ListFieldBloc(
                   name: 'medicines',
@@ -67,8 +60,8 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
                           medicine: medicine,
                           name: 'medicine',
                           medicineName: TextFieldBloc(
-                              name: 'medicineName',
-                              validators: [FieldBlocValidators.required]),
+                            name: 'medicineName',
+                          ),
                           activeSubstance:
                               TextFieldBloc(name: 'activeSubstance'),
                           howOften: TextFieldBloc(name: 'howOften'),
@@ -82,7 +75,7 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
             );
             return prescriptionFieldBloc;
           }).toList()),
-        specialites..updateInitialValue(disease?.specialities ?? []),
+        specialites..updateInitialValue(disease.specialities ?? []),
       ],
     );
   }
@@ -112,12 +105,12 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
   }
 
   void addMedicineToPrescription(int prescriptionIndex) {
-    prescriptions.value[prescriptionIndex].medicines.addFieldBloc(
-        MedicineFieldBloc(
+    prescriptions.value[prescriptionIndex].medicines
+        .addFieldBloc(MedicineFieldBloc(
             name: 'medicine',
             medicineName: TextFieldBloc(
-                name: 'medicineName',
-                validators: [FieldBlocValidators.required]),
+              name: 'medicineName',
+            ),
             activeSubstance: TextFieldBloc(name: 'activeSubstance'),
             howOften: TextFieldBloc(name: 'howOften'),
             howMany: TextFieldBloc(name: 'howMany'),
@@ -132,9 +125,10 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
   }
 
   void addExplanationToPrescription(int prescriptionIndex) {
-    prescriptions.value[prescriptionIndex].explanation.addFieldBloc(
-        TextFieldBloc(
-            name: 'explanation', validators: [FieldBlocValidators.required]));
+    prescriptions.value[prescriptionIndex].explanation
+        .addFieldBloc(TextFieldBloc(
+      name: 'explanation',
+    ));
   }
 
   void removeExplanationFromPrescription(
@@ -144,6 +138,7 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
 
   Disease resultDisease() {
     return Disease(
+      id: disease.id,
       name: diseaseName.value,
       explanation: diseaseExplanation.value,
       warnings: warnings.value.map<String>((warningField) {
@@ -154,6 +149,9 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
       specialities: specialites.value,
       prescriptions: prescriptions.value.map<Prescription>((prescriptionField) {
         return Prescription(
+            id: disease
+                .prescriptions?[prescriptions.value.indexOf(prescriptionField)]
+                .id,
             name: prescriptionField.prescriptionName.value,
             shortDescription: prescriptionField.shortDescription.value,
             explanation: prescriptionField.explanation.value
@@ -163,6 +161,12 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
             medicines: prescriptionField.medicines.value
                 .map<Medicine>((medicineField) {
               return Medicine(
+                  id: disease
+                      .prescriptions?[
+                          prescriptions.value.indexOf(prescriptionField)]
+                      .medicines?[prescriptionField.medicines.value
+                          .indexOf(medicineField)]
+                      .id,
                   name: medicineField.medicineName.value,
                   activeSubstance: medicineField.activeSubstance.value,
                   howOften: medicineField.howOften.valueToInt,
@@ -178,75 +182,13 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
   @override
   void onSubmitting() async {
     final disease = resultDisease();
+    debugPrint(disease.toJson().toString());
 
     try {
-      await SupabaseService().addDisease(disease);
-      debugPrint(disease.toJson().toString());
+      await SupabaseService().updateDisease(disease);
       emitSuccess(canSubmitAgain: false);
-    } catch (error) {
-      emitFailure();
-      debugPrint('Error adding disease: $error');
+    } catch (e) {
+      emitFailure(failureResponse: e.toString());
     }
   }
-}
-
-class PrescriptionFieldBloc extends GroupFieldBloc {
-  final TextFieldBloc prescriptionName;
-  final TextFieldBloc shortDescription;
-  final ListFieldBloc<MedicineFieldBloc, dynamic> medicines;
-  final ListFieldBloc<TextFieldBloc, dynamic> explanation;
-
-  PrescriptionFieldBloc({
-    required this.prescriptionName,
-    required this.shortDescription,
-    required this.medicines,
-    required this.explanation,
-    String? name,
-    Prescription? prescription,
-  }) : super(name: name, fieldBlocs: [
-          prescriptionName..updateInitialValue(prescription?.name ?? ''),
-          shortDescription
-            ..updateInitialValue(prescription?.shortDescription ?? ''),
-          explanation
-            ..addFieldBlocs(prescription?.explanation?.map((explanation) {
-                  return TextFieldBloc(initialValue: explanation);
-                }).toList() ??
-                []),
-          medicines
-        ]);
-}
-
-class MedicineFieldBloc extends GroupFieldBloc {
-  final TextFieldBloc medicineName;
-  final TextFieldBloc activeSubstance;
-  final TextFieldBloc howOften;
-  final TextFieldBloc howMany;
-  final TextFieldBloc kutuSayisi;
-  final TextFieldBloc howToUse;
-  final TextFieldBloc barkod;
-
-  MedicineFieldBloc({
-    required this.medicineName,
-    required this.activeSubstance,
-    required this.howOften,
-    required this.howMany,
-    required this.kutuSayisi,
-    required this.howToUse,
-    required this.barkod,
-    String? name,
-    Medicine? medicine,
-  }) : super(
-          name: name,
-          fieldBlocs: [
-            medicineName..updateInitialValue(medicine?.name ?? ''),
-            activeSubstance
-              ..updateInitialValue(medicine?.activeSubstance ?? ''),
-            howOften..updateInitialValue(medicine?.howOften.toString() ?? ''),
-            howMany..updateInitialValue(medicine?.howMany.toString() ?? ''),
-            kutuSayisi
-              ..updateInitialValue(medicine?.numberOfBoxes.toString() ?? ''),
-            howToUse..updateInitialValue(medicine?.howToUse ?? ''),
-            barkod..updateInitialValue(medicine?.barkod.toString() ?? ''),
-          ],
-        );
 }

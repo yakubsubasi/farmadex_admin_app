@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:farmadex_models/farmadex_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
@@ -48,9 +46,8 @@ class ListFieldFormBloc extends FormBloc<String, String> {
         searchText..updateInitialValue(disease?.searchText ?? ''),
         warnings
           ..addFieldBlocs((disease?.warnings ?? []).map((warning) {
-                return TextFieldBloc(name: 'warning', initialValue: warning);
-              }).toList() ??
-              []),
+            return TextFieldBloc(name: 'warning', initialValue: warning);
+          }).toList()),
         prescriptions
           ..addFieldBlocs((disease?.prescriptions ?? []).map((prescription) {
             final prescriptionFieldBloc = PrescriptionFieldBloc(
