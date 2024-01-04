@@ -27,6 +27,7 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
   );
 
   final specialites = MultiSelectFieldBloc(items: Speciality.values);
+
   final Disease disease;
 
   UpdateFieldFormBloc(this.disease) {
@@ -48,11 +49,7 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
               name: 'prescription',
               prescriptionName: TextFieldBloc(name: 'name'),
               shortDescription: TextFieldBloc(name: 'shortDescription'),
-              explanation: ListFieldBloc(name: 'explanation', fieldBlocs: [
-                TextFieldBloc(
-                  name: 'explanation',
-                )
-              ]),
+              explanation: ListFieldBloc(name: 'explanation'),
               medicines: ListFieldBloc(
                   name: 'medicines',
                   fieldBlocs: prescription.medicines?.map((medicine) {
@@ -185,7 +182,7 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
     debugPrint(disease.toJson().toString());
 
     try {
-      await SupabaseService().updateDisease(disease);
+      await SupabaseService().updateDisease2(disease);
       emitSuccess(canSubmitAgain: false);
     } catch (e) {
       emitFailure(failureResponse: e.toString());

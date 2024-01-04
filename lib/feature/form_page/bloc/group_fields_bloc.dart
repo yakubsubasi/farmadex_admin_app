@@ -29,60 +29,35 @@ class ListFieldFormBloc extends FormBloc<String, String> {
           name: 'prescription',
           prescriptionName: TextFieldBloc(name: 'name'),
           shortDescription: TextFieldBloc(name: 'shortDescription'),
-          medicines: ListFieldBloc(name: 'medicines'),
-          explanation: ListFieldBloc(name: 'explanation'),
+          medicines: ListFieldBloc(name: 'medicines', fieldBlocs: [
+            MedicineFieldBloc(
+              name: 'medicine',
+              medicineName: TextFieldBloc(name: 'medicineName'),
+              activeSubstance: TextFieldBloc(name: 'activeSubstance'),
+              howOften: TextFieldBloc(name: 'howOften'),
+              howMany: TextFieldBloc(name: 'howMany'),
+              kutuSayisi: TextFieldBloc(name: 'kutuSayisi'),
+              howToUse: TextFieldBloc(name: 'howToUse'),
+              barkod: TextFieldBloc(name: 'numberOfBoxes'),
+            )
+          ]),
+          explanation: ListFieldBloc(name: 'explanation', fieldBlocs: [
+            TextFieldBloc(name: 'explanation'),
+          ]),
         )
       ]);
 
   final specialites = MultiSelectFieldBloc(items: Speciality.values);
 
-  ListFieldFormBloc([Disease? disease]) {
+  ListFieldFormBloc() {
     addFieldBlocs(
       fieldBlocs: [
-        diseaseName..updateInitialValue(disease?.name ?? ''),
-        diseaseExplanation..updateInitialValue(disease?.explanation ?? ''),
-        diseaseShortDescription
-          ..updateInitialValue(disease?.shortDescription ?? ''),
-        searchText..updateInitialValue(disease?.searchText ?? ''),
-        warnings
-          ..addFieldBlocs((disease?.warnings ?? []).map((warning) {
-            return TextFieldBloc(name: 'warning', initialValue: warning);
-          }).toList()),
-        prescriptions
-          ..addFieldBlocs((disease?.prescriptions ?? []).map((prescription) {
-            final prescriptionFieldBloc = PrescriptionFieldBloc(
-              prescription: prescription,
-              name: 'prescription',
-              prescriptionName: TextFieldBloc(name: 'name'),
-              shortDescription: TextFieldBloc(name: 'shortDescription'),
-              explanation: ListFieldBloc(name: 'explanation', fieldBlocs: [
-                TextFieldBloc(
-                    name: 'explanation',
-                    validators: [FieldBlocValidators.required])
-              ]),
-              medicines: ListFieldBloc(
-                  name: 'medicines',
-                  fieldBlocs: prescription.medicines?.map((medicine) {
-                        return MedicineFieldBloc(
-                          medicine: medicine,
-                          name: 'medicine',
-                          medicineName: TextFieldBloc(
-                              name: 'medicineName',
-                              validators: [FieldBlocValidators.required]),
-                          activeSubstance:
-                              TextFieldBloc(name: 'activeSubstance'),
-                          howOften: TextFieldBloc(name: 'howOften'),
-                          howMany: TextFieldBloc(name: 'howMany'),
-                          kutuSayisi: TextFieldBloc(name: 'kutuSayisi'),
-                          howToUse: TextFieldBloc(name: 'howToUse'),
-                          barkod: TextFieldBloc(name: 'barkod'),
-                        );
-                      }).toList() ??
-                      []),
-            );
-            return prescriptionFieldBloc;
-          }).toList()),
-        specialites..updateInitialValue(disease?.specialities ?? []),
+        diseaseName,
+        diseaseExplanation,
+        diseaseShortDescription,
+        warnings,
+        prescriptions,
+        specialites
       ],
     );
   }
@@ -132,9 +107,8 @@ class ListFieldFormBloc extends FormBloc<String, String> {
   }
 
   void addExplanationToPrescription(int prescriptionIndex) {
-    prescriptions.value[prescriptionIndex].explanation.addFieldBloc(
-        TextFieldBloc(
-            name: 'explanation', validators: [FieldBlocValidators.required]));
+    prescriptions.value[prescriptionIndex].explanation
+        .addFieldBloc(TextFieldBloc(name: 'explanation'));
   }
 
   void removeExplanationFromPrescription(

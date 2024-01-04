@@ -12,6 +12,15 @@ class SupabaseService {
     return diseases;
   }
 
+  Future<void> deleteDisease(int id) async {
+    await supabase.from('diseases').delete().eq('id', id);
+  }
+
+  Future<void> updateDisease2(Disease disease) async {
+    await supabase.from('diseases').delete().eq('id', disease.id);
+    await addDisease(disease);
+  }
+
   Future<Disease> updateDisease(Disease disease) async {
     final diseaseMap = disease.toJson();
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../form_page_screen.dart';
+import 'package:form_for_supabase_db/feature/list_all_desease_page/list_disease_view.dart';
 
 class SuccessScreen extends StatelessWidget {
   const SuccessScreen({Key? key}) : super(key: key);
@@ -22,7 +21,7 @@ class SuccessScreen extends StatelessWidget {
             const SizedBox(height: 10),
             ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const FormPage())),
+                  MaterialPageRoute(builder: (_) => const ListDiseaseView())),
               icon: const Icon(Icons.replay),
               label: const Text('AGAIN'),
             ),
