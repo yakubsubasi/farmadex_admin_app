@@ -55,6 +55,7 @@ class ListFieldFormBloc extends FormBloc<String, String> {
         diseaseName,
         diseaseExplanation,
         diseaseShortDescription,
+        searchText,
         warnings,
         prescriptions,
         specialites

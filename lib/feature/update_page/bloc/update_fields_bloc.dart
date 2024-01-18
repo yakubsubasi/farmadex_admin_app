@@ -146,9 +146,9 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
       specialities: specialites.value,
       prescriptions: prescriptions.value.map<Prescription>((prescriptionField) {
         return Prescription(
-            id: disease
-                .prescriptions?[prescriptions.value.indexOf(prescriptionField)]
-                .id,
+            // id: disease
+            //     .prescriptions?[prescriptions.value.indexOf(prescriptionField)]
+            //     .id,
             name: prescriptionField.prescriptionName.value,
             shortDescription: prescriptionField.shortDescription.value,
             explanation: prescriptionField.explanation.value
@@ -158,12 +158,12 @@ class UpdateFieldFormBloc extends FormBloc<String, String> {
             medicines: prescriptionField.medicines.value
                 .map<Medicine>((medicineField) {
               return Medicine(
-                  id: disease
-                      .prescriptions?[
-                          prescriptions.value.indexOf(prescriptionField)]
-                      .medicines?[prescriptionField.medicines.value
-                          .indexOf(medicineField)]
-                      .id,
+                  // id: disease
+                  //     .prescriptions?[
+                  //         prescriptions.value.indexOf(prescriptionField)]
+                  //     .medicines?[prescriptionField.medicines.value
+                  //         .indexOf(medicineField)]
+                  //     .id,
                   name: medicineField.medicineName.value,
                   activeSubstance: medicineField.activeSubstance.value,
                   howOften: medicineField.howOften.valueToInt,
