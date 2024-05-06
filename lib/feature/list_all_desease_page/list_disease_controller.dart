@@ -1,4 +1,5 @@
 import 'package:farmadex_models/farmadex_models.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -31,4 +32,22 @@ class DiseaseListController extends _$DiseaseListController {
 
     return diseases;
   }
+}
+
+final searchQueryProvider = StateProvider<String>(
+  (ref) => '',
+);
+
+@riverpod
+List<Disease> searchedDiseaseList(SearchedDiseaseListRef ref) {
+  final query = ref.watch(searchQueryProvider);
+  final list = ref.watch(diseaseListControllerProvider).requireValue;
+
+  return query == ''
+      ? list
+      : list.where((element) {
+          return element.searchText!
+              .toLowerCase()
+              .contains(query.toLowerCase());
+        }).toList();
 }

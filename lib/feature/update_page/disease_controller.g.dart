@@ -6,7 +6,7 @@ part of 'disease_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$diseaseControllerHash() => r'3dabc356a1a966fecd2d59bf07bfb5cdb2edae08';
+String _$diseaseControllerHash() => r'5384cc952d261bfe46da96f7f554b1f878b24699';
 
 /// Copied from Dart SDK
 class _SystemHash {

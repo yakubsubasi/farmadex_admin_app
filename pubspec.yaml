@@ -46,7 +46,11 @@ dependencies:
       url: https://github.com/yakubsubasi/farmadex_models.git
   flutter_riverpod: ^2.4.9
   riverpod_annotation: ^2.3.3
-  flutter_form_bloc: ^0.31.0
+    # flutter_form_bloc: ^0.31.0
+  flutter_form_bloc:
+    git:
+      url: https://github.com/Cavin6080/form_bloc.git
+      path: packages/flutter_form_bloc
 
 dev_dependencies:
   flutter_test:

@@ -6,6 +6,22 @@ part of 'list_disease_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$searchedDiseaseListHash() =>
+    r'c60e4572bb9dbed4659b2c9ab38fd078c44e8833';
+
+/// See also [searchedDiseaseList].
+@ProviderFor(searchedDiseaseList)
+final searchedDiseaseListProvider = AutoDisposeProvider<List<Disease>>.internal(
+  searchedDiseaseList,
+  name: r'searchedDiseaseListProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$searchedDiseaseListHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SearchedDiseaseListRef = AutoDisposeProviderRef<List<Disease>>;
 String _$diseaseListControllerHash() =>
     r'dcadf1f0ffd37d278faac3a41a6db61511f2d38b';
 
